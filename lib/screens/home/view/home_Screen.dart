@@ -15,6 +15,12 @@ class _HomeScreenState extends State<HomeScreen> {
   HomeProvider? homeProviderFalse;
 
   @override
+  void initState() {
+    super.initState();
+    Provider.of<HomeProvider>(context, listen: false).ProductApiCall();
+  }
+
+  @override
   Widget build(BuildContext context) {
     homeProviderFalse = Provider.of<HomeProvider>(context, listen: false);
     homeProviderTrue = Provider.of<HomeProvider>(context, listen: true);
@@ -26,39 +32,40 @@ class _HomeScreenState extends State<HomeScreen> {
           future: homeProviderFalse!.ProductApiCall(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
+              print(
+                  "===========================================================================${snapshot.error}");
               return Text("${snapshot.error}");
             } else if (snapshot.hasData) {
-
               List<dynamic>? productModel = snapshot.data;
 
               return ListView.builder(
+                itemCount: productModel!.length,
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: const EdgeInsets.all(5.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: Container(
-                      color: Colors.blueGrey.shade100,
+                      height: 80,
+                      width: 150,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black),
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.blue.shade50,
+                      ),
                       child: ListTile(
                         leading: Container(
                           height: 50,
                           width: 50,
                           decoration: BoxDecoration(shape: BoxShape.circle),
-                          child: Image.network(
+                          child: Text(
                             "${homeProviderFalse!.product[index].p_image}",
-                            fit: BoxFit.cover,
+
                           ),
                         ),
                         title:  Text(
                           "${homeProviderFalse!.product[index].p_name}",
                           style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
                         ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("rate  : ${homeProviderFalse!.product[index].p_rate}"),
-                            Text("price  :${homeProviderFalse!.product[index].p_price}"),
-
-                          ],
-                        ),
+                        subtitle: Text("price  :${homeProviderFalse!.product[index].p_rate}"),
                         trailing: Column(
                           children: [
                             Text("${homeProviderFalse!.product[index].p_offer}"),
@@ -69,8 +76,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   );
+
                 },
-                itemCount: homeProviderTrue!.product.length,
               );
             }
             return Center(child: CircularProgressIndicator());
@@ -80,4 +87,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-

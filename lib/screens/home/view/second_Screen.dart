@@ -18,11 +18,16 @@ class _SecondScreenState extends State<SecondScreen> {
   TextEditingController txtdesc = TextEditingController();
   TextEditingController txtcate = TextEditingController();
   List<ProductModel> Alldata = [];
+  HomeProvider? homeProviderTrue;
+  HomeProvider? homeProviderFalse;
 
   @override
   Widget build(BuildContext context) {
+    homeProviderFalse = Provider.of<HomeProvider>(context, listen: false);
+    homeProviderTrue = Provider.of<HomeProvider>(context, listen: true);
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.blue.shade100,
         appBar: AppBar(
           title: Text("Product Get&Post API"),
         ),
@@ -64,9 +69,10 @@ class _SecondScreenState extends State<SecondScreen> {
                 child: TextField(
                   controller: txtprice,
                   decoration: InputDecoration(
-                      label: Text("Enter the price"),
-                      enabled: true,
-                      border: OutlineInputBorder()),
+                    label: Text("Enter the price"),
+                    enabled: true,
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               ),
               Padding(
@@ -74,9 +80,10 @@ class _SecondScreenState extends State<SecondScreen> {
                 child: TextField(
                   controller: txtdesc,
                   decoration: InputDecoration(
-                      label: Text("Enter the description"),
-                      enabled: true,
-                      border: OutlineInputBorder()),
+                    label: Text("Enter the description"),
+                    enabled: true,
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               ),
               Padding(
@@ -108,18 +115,8 @@ class _SecondScreenState extends State<SecondScreen> {
                       p_price: price,
                       p_rate: rate);
                   Alldata.add(p1);
-                  String msg = await Provider.of<HomeProvider>(context,
-                          listen: false)
-                      .Chenge(
-                    offer,
-                    price,
-                    rate,
-                    category,
-                    description,
-                    name,
-                  );
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text("$msg")));
+                  homeProviderFalse!.PostApiCall(
+                      name, price, description, category, rate, offer);
                 },
                 child: Text("Submit"),
               ),

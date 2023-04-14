@@ -1,11 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:product_get_post_api/screens/home/modal/home_modal.dart';
 
 import '../../utiles/api_helper.dart';
 
-class HomeProvider extends ChangeNotifier
-{
+class HomeProvider extends ChangeNotifier {
   List<dynamic> product = [];
 
   Future<List<dynamic>> ProductApiCall() async {
@@ -14,10 +12,18 @@ class HomeProvider extends ChangeNotifier
     product = productModel1;
     return product;
   }
-  Future<String> Chenge(String name,String rate,String category,String description,String price,String offer) async {
-    ApiHelper apiHelper=ApiHelper();
-    String msg = await apiHelper.apicall(name, rate,category,offer,description,price);
-    return msg;
 
+  Future<void> PostApiCall(p_name,p_rate,p_offer,p_desc,p_cate,p_price) async {
+    ApiHelper apiHelper = ApiHelper();
+    bool data = await apiHelper.creatData(p_name,p_rate,p_cate,p_desc,p_offer,p_price);
+    notifyListeners();
+    if(data == true)
+    {
+      print("Success");
+    }
+    else
+    {
+      print("Fail");
+    }
   }
 }
